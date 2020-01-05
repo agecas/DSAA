@@ -86,7 +86,7 @@ steps:
   displayName: 'Publish Symbols'
   inputs:
     SymbolServerType: TeamServices
-    SearchPattern: '**/bin**/*.pdb'
+    # SearchPattern: '**/bin**/*.pdb'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifacts'
