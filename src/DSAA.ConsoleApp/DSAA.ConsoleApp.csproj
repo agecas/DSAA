@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DSAA.Graph\DSAA.Graph.csproj" />
     <ProjectReference Include="..\DSAA.Heap\DSAA.Heap.csproj" />
     <ProjectReference Include="..\DSAA.List\DSAA.List.csproj" />
