@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Aurimas Gecas</Authors>
+    <Company>AG Golden Limited</Company>
+    <Description>Most common Graph Data Structures and Algorithms with Fluent Builder.
+
+</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSAA.Heap\DSAA.Heap.csproj" />
+  </ItemGroup>
+
+</Project>

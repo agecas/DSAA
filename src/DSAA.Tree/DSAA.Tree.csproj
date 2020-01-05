@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Aurimas Gecas</Authors>
+    <Company>AG Golden Limited</Company>
+    <Description>AVL and Binary Search Tree data structures and traversal algorithms, such as: BFS and 3 variants of DFS</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DSAA.Shared\DSAA.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
