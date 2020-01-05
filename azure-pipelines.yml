@@ -1,0 +1,92 @@
+pool:
+  name: Default
+
+variables:
+  BuildConfiguration: 'release'
+  Verbosity: 'normal'
+  GitVersion.Version: '5.1.3'
+  Nuget.Version: '5.4.0'
+  Nuget.Feed: '0b83b6f8-46a0-4915-b8a6-55079d7dd76b'
+
+steps:
+
+# Install Required Tools
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet $(Nuget.Version)'
+  inputs:
+    versionSpec: $(Nuget.Version)
+
+- task: NuGetCommand@2
+  displayName: 'Install GitVersion $(GitVersion.Version)'
+  inputs:
+    command: custom
+    arguments: install GitVersion.CommandLine -Version $(GitVersion.Version) -OutputDirectory $(Build.BinariesDirectory)/tools -ExcludeVersion
+- script: mono $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/GitVersion.exe /output buildserver /nofetch
+
+- task: UseDotNet@2
+  displayName: 'Use latest .NET Core 3.x SDK'
+  inputs:
+    packageType: sdk
+    version: 3.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+# Build system configuration
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet info'
+  inputs:
+    command: custom
+    custom: '--info'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet version'
+  inputs:
+    command: custom
+    custom: '--version'
+
+# Build the solution
+- task: NuGetCommand@2
+  displayName: 'NuGet Restore'
+  inputs:
+    command: 'restore'
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration $(BuildConfiguration) /p:langversion=latest /p:Version=$(GitVersion.NuGetVersion) --no-restore -v $(verbosity)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run Tests'
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(BuildConfiguration) -v $(verbosity) --no-build'
+
+# Publish Artifacts
+- task: DotNetCoreCLI@2
+  displayName: 'Publish ConsoleApp'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: '**/*DSAA.ConsoleApp.csproj'
+    arguments: '--configuration $(BuildConfiguration) -v $(verbosity) --no-build --output $(Build.StagingDirectory)/console'
+    zipAfterPublish: true
+
+- task: CopyFiles@2
+  displayName: 'Prepare NuGet packages for Publishing'
+  inputs:
+    Contents: '**/*.nupkg'
+    TargetFolder: '$(Build.StagingDirectory)/packages'
+    CleanTargetFolder: true
+    OverWrite: true
+    FlattenFolders: true
+
+- task: PublishSymbols@2
+  displayName: 'Publish Symbols'
+  inputs:
+    SymbolServerType: TeamServices
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifacts'
+  inputs:
+    PathtoPublish: $(Build.StagingDirectory)
