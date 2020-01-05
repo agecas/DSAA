@@ -44,16 +44,17 @@ steps:
     custom: '--version'
 
 # Build the solution
-# - task: NuGetCommand@2
-#   displayName: 'NuGet Restore'
-#   inputs:
-#     command: 'restore'
+- task: NuGetCommand@2
+  displayName: 'NuGet Restore'
+  inputs:
+    command: 'restore'
+  
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:
     command: build
     projects: '**/*.csproj'
-    arguments: '--configuration $(BuildConfiguration) /p:langversion=latest /p:Version=$(GitVersion.NuGetVersion) -v $(verbosity)'
+    arguments: '--configuration $(BuildConfiguration) /p:langversion=latest /p:Version=$(GitVersion.NuGetVersion) /p:SourceLinkCreate=true -v $(verbosity) --no-restore'
 
 - task: DotNetCoreCLI@2
   displayName: 'Run Tests'
