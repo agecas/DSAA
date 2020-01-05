@@ -21,7 +21,7 @@ steps:
   inputs:
     command: custom
     arguments: install GitVersion.CommandLine -Version $(GitVersion.Version) -OutputDirectory $(Build.BinariesDirectory)/tools -ExcludeVersion
-- script: mono $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/GitVersion.exe /output buildserver /nofetch
+- script: powershell $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/GitVersion.exe /output buildserver /nofetch
 
 - task: UseDotNet@2
   displayName: 'Use latest .NET Core 3.x SDK'
