@@ -1,5 +1,15 @@
 mode: Mainline
-branches: {}
+next-version: 1.0.0
+branches:
+  master:
+    tag: ''
+  release:
+    tag: rc
+  feature:
+    tag: alpha
+    increment: Patch
+  pull-request:
+    tag: rc
 ignore:
   sha: []
 merge-message-formats: {}
